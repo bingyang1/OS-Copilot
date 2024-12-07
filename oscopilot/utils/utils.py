@@ -488,7 +488,7 @@ def check_os_version(s):
         ValueError: If the operating system version is not recognized as a known
                     supported version.
     """
-    if "mac" in s or "Ubuntu" in s or "CentOS" in s:
+    if "mac" in s or "Ubuntu" in s or "CentOS" in s or "AlmaLinux" in s or "Anolis" in s:
         print("Operating System Version:", s)
     else:
         raise ValueError("Unknown Operating System")
