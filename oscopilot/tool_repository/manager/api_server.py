@@ -8,6 +8,7 @@ app = FastAPI()
 
 # Import your services
 from oscopilot.tool_repository.api_tools.bing.bing_service import router as bing_router
+from oscopilot.tool_repository.api_tools.duckduckgo.duck_service import router as duck_router
 from oscopilot.tool_repository.api_tools.audio2text.audio2text_service import router as audio2text_router
 from oscopilot.tool_repository.api_tools.image_caption.image_caption_service import router as image_caption_router
 from oscopilot.tool_repository.api_tools.wolfram_alpha.wolfram_alpha import router as wolfram_alpha_router
@@ -34,12 +35,13 @@ app.add_middleware(LoggingMiddleware)
 # Create a dictionary that maps service names to their routers
 services = {
     "bing": bing_router, # bing_search, image_search and web_loader
+    "duck": duck_router, # duckduckgo search news_search image_search videos_search  and web_loader
     "autio2text": audio2text_router,
     "image_caption": image_caption_router,
     "wolfram_alpha": wolfram_alpha_router
 }
 
-server_list = ["bing", "autio2text", "image_caption"]
+server_list = ["duck", "autio2text", "image_caption"]
 
 # Include only the routers for the services listed in server_list
 for service in server_list:
