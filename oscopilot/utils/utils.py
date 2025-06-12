@@ -20,6 +20,17 @@ from functools import wraps
 
 def save_json(file_path, new_json_content):
     """
+    将JSON内容保存到文件中。
+
+    Args:
+    file_path (str): JSON文件的路径。
+    new_json_content (dict或list): 要保存的新JSON内容。
+
+    Returns:
+        None
+    """
+
+    """
     Saves JSON content to a file.
 
     Args:
@@ -112,6 +123,7 @@ def num_tokens_from_string(string: str) -> int:
 def parse_content(content, html_type="html.parser"):
     """
     Parses and cleans the given HTML content, removing specified tags, ids, and classes.
+    解析并清理给定的 HTML 内容，移除指定的标签、ID 和类。
 
     Args:
         content (str): The HTML content to be parsed and cleaned.
@@ -185,6 +197,8 @@ def clean_string(text):
     removal of backslashes, and replacement of hash characters with spaces. It also reduces
     consecutive non-alphanumeric characters to a single occurrence.
 
+    通过执行各种操作（如空白字符规范化、删除反斜杠以及将井号字符替换为空格）来清理给定的字符串。它还会将连续的非字母数字字符缩减为单个字符。
+
     Args:
         text (str): The text to be cleaned.
 
@@ -217,6 +231,7 @@ def clean_string(text):
 def is_readable(s):
     """
     Heuristic to determine if a string is "readable" (mostly contains printable characters and forms meaningful words)
+    用于判断一个字符串是否“可读”的启发式方法（该字符串大多包含可打印字符且能组成有意义的单词）
 
     :param s: string
     :return: True if the string is more than 95% printable.
@@ -234,6 +249,9 @@ def format_source(source: str, limit: int = 20) -> str:
     Format a string to only take the first x and last x letters.
     This makes it easier to display a URL, keeping familiarity while ensuring a consistent length.
     If the string is too short, it is not sliced.
+    格式化字符串，只取前x个和后x个字母。
+    这样可以更轻松地显示URL，既保持熟悉度，又确保长度一致。
+    如果字符串太短，则不进行切片。
     """
     if len(source) > 2 * limit:
         return source[:limit] + "..." + source[-limit:]
@@ -243,6 +261,7 @@ def format_source(source: str, limit: int = 20) -> str:
 def is_valid_json_string(source: str):
     """
     Checks if a given string is a valid JSON.
+    检查给定的字符串是否是有效的JSON。
     
     Args:
         source (str): The string to be validated as JSON.
@@ -264,6 +283,7 @@ def is_valid_json_string(source: str):
 def chunks(iterable, batch_size=100, desc="Processing chunks"):
     """
     Breaks an iterable into smaller chunks of a specified size, yielding each chunk in sequence.
+    将一个可迭代对象分割成指定大小的较小块，并按顺序生成每个块。
 
     Args:
         iterable (iterable): The iterable to be chunked.
@@ -287,6 +307,7 @@ def chunks(iterable, batch_size=100, desc="Processing chunks"):
 def generate_prompt(template: str, replace_dict: dict):
     """
     Generates a string by replacing placeholders in a template with values from a dictionary.
+    通过使用字典中的值替换模板中的占位符来生成一个字符串。
 
     Args:
         template (str): The template string containing placeholders to be replaced.
@@ -305,6 +326,7 @@ def generate_prompt(template: str, replace_dict: dict):
 def cosine_similarity(a, b):
     """
     Calculates the cosine similarity between two vectors.
+    计算两个向量之间的余弦相似度。
 
     Args:
         a (array_like): The first vector.
@@ -319,6 +341,7 @@ def cosine_similarity(a, b):
 def send_chat_prompts(sys_prompt, user_prompt, llm, prefix=""):
     """
     Sends a sequence of chat prompts to a language learning model (LLM) and returns the model's response.
+    向语言学习模型（LLM）发送一系列聊天提示，并返回模型的回复。
 
     Args:
         sys_prompt (str): The system prompt that sets the context or provides instructions for the language learning model.
@@ -340,6 +363,7 @@ def send_chat_prompts(sys_prompt, user_prompt, llm, prefix=""):
 def get_project_root_path():
     """
     This function returns the absolute path of the project root directory. It assumes that it is being called from a file located in oscopilot/utils/.
+    此函数返回项目根目录的绝对路径。它假定该函数是从位于oscopilot/utils/目录下的文件中调用的。
     
     Args:
         None
@@ -362,6 +386,17 @@ def get_project_root_path():
 
 
 def GAIA_postprocess(question, response):
+    '''
+    Postprocess the response from GAIA.
+    对来自 GAIA 的回复进行后处理。
+    Args:
+        question (str): The question asked to GAIA.
+        response (str): The response from GAIA.
+    
+    Returns:
+        str: The postprocessed response from GAIA.
+
+    '''
     llm = OpenAI()
     extractor_prompt = general_pt['GAIA_ANSWER_EXTRACTOR_PROMPT'].format(
         question=question,
@@ -448,6 +483,10 @@ def get_os_version():
     If the system is not macOS or Linux, or if the Linux version cannot be determined, it
     defaults to a generic version string or "Unknown Operating System".
 
+    确定当前系统的操作系统版本。
+
+    此函数检查当前环境的操作系统，并尝试返回一个易于理解的版本字符串。对于 macOS，它使用platform.mac_ver()方法。对于 Linux，它尝试从/etc/os-release读取版本信息。如果系统既不是 macOS 也不是 Linux，或者无法确定 Linux 版本，则默认为通用版本字符串或 “未知操作系统”。
+
     Returns:
         str: A string describing the operating system version, or "Unknown Operating System"
              if the version cannot be determined.
@@ -468,6 +507,8 @@ def get_os_version():
             pass
 
         return platform.version()
+    elif system == "Windows":
+        return 'Windows ' + platform.win32_ver()[0]
     else:
         return "Unknown Operating System"
 
@@ -481,6 +522,11 @@ def check_os_version(s):
     If the version string does not match any of the known supported versions, it raises
     a ValueError.
 
+    检查操作系统版本字符串是否与已知的受支持版本匹配。
+
+    此函数检查给定的操作系统版本字符串，以确定它是否包含表明受支持的已知子字符串（例如，“mac”、“Ubuntu”、“CentOS”）。如果版本字符串与任何已知的受支持版本都不匹配，则会引发`ValueError`。 
+    
+
     Args:
         s (str): The operating system version string to check.
 
@@ -488,6 +534,12 @@ def check_os_version(s):
         ValueError: If the operating system version is not recognized as a known
                     supported version.
     """
+    # os = ['mac','Ubuntu','CentOS','AlmaLinux','Anolis','Windows']
+    # if True in  [v in 'Windows' for v in os]:
+    #     print("Operating System Version:", s)
+    # else:
+    #     raise ValueError("Unknown Operating System")
+    
     if "mac" in s or "Ubuntu" in s or "CentOS" in s or "AlmaLinux" in s or "Anolis" in s:
         print("Operating System Version:", s)
     else:
@@ -499,6 +551,9 @@ def api_exception_mechanism(max_retries=3):
     A decorator to add a retry mechanism to functions, particularly for handling API calls.
     This decorator will retry a function up to `max_retries` times if an exception is raised.
 
+    一个用于为函数添加重试机制的装饰器，特别是用于处理API调用。
+    这个装饰器会在函数引发异常时，最多重试 `max_retries` 次。
+
     Args:
     max_retries (int): The maximum number of retries allowed before giving up and re-raising the exception.
 
@@ -508,6 +563,8 @@ def api_exception_mechanism(max_retries=3):
     def decorator(func):
         """
         The actual decorator that takes a function and applies the retry logic to it.
+
+        实际的装饰器，它接受一个函数并将重试逻辑应用于该函数。
 
         Args:
         func (function): The function to which the retry mechanism will be applied.
@@ -519,6 +576,8 @@ def api_exception_mechanism(max_retries=3):
         def wrapper(*args, **kwargs):
             """
             A wrapper function that executes the decorated function and handles exceptions by retrying.
+
+            一个包装函数，它执行被装饰的函数，并通过重试来处理异常。
 
             Args:
             *args: Variable length argument list for the decorated function.
